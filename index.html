@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Page</title>
+  <title>Premium Video Page</title>
 
   <style>
     * {
@@ -12,72 +12,277 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --bg: #07080c;
+      --card: rgba(20, 22, 30, 0.82);
+      --text: #ffffff;
+      --muted: #9ca3af;
+      --red: #ff1744;
+      --green: #00e676;
+    }
+
     body {
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #111;
-      font-family: Arial, sans-serif;
+      padding: 30px 15px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 23, 68, 0.15), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(0, 230, 118, 0.10), transparent 30%),
+        var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
     }
 
     .container {
-      width: 90%;
-      max-width: 500px;
-      text-align: center;
-      background: #1c1c1c;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      position: relative;
+      width: 100%;
+      max-width: 540px;
+      padding: 12px;
+      border-radius: 28px;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.12),
+        rgba(255,255,255,0.02)
+      );
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.65),
+        0 0 60px rgba(255,23,68,0.08);
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border-radius: 22px;
+      background: var(--card);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Top badge */
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 13px;
+      margin-bottom: 15px;
+      border-radius: 50px;
+      background: rgba(255,23,68,0.12);
+      border: 1px solid rgba(255,23,68,0.25);
+      color: #ff6b87;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .badge span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
     }
 
     .title {
-      color: white;
-      font-size: 28px;
-      margin-bottom: 20px;
+      font-size: clamp(25px, 6vw, 34px);
+      line-height: 1.15;
+      margin-bottom: 8px;
+      letter-spacing: -0.8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    /* Video */
+
+    .video-box {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      margin-bottom: 22px;
+      background: #000;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
     }
 
     .thumbnail {
       width: 100%;
-      border-radius: 12px;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
       display: block;
-      margin-bottom: 25px;
+      transition: transform 0.6s ease;
     }
 
-    .buttons {
+    .video-box:hover .thumbnail {
+      transform: scale(1.045);
+    }
+
+    .video-overlay {
+      position: absolute;
+      inset: 0;
       display: flex;
-      gap: 12px;
+      align-items: center;
       justify-content: center;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.05),
+        rgba(0,0,0,0.4)
+      );
+    }
+
+    .play-button {
+      width: 76px;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-left: 4px;
+      border-radius: 50%;
+      background: rgba(255,23,68,0.92);
+      color: white;
+      font-size: 28px;
+      box-shadow:
+        0 0 0 10px rgba(255,23,68,0.14),
+        0 12px 35px rgba(255,23,68,0.45);
+      transition: 0.3s ease;
+    }
+
+    .video-box:hover .play-button {
+      transform: scale(1.1);
+      box-shadow:
+        0 0 0 14px rgba(255,23,68,0.12),
+        0 15px 45px rgba(255,23,68,0.55);
+    }
+
+    .duration {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      padding: 6px 9px;
+      border-radius: 7px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Buttons */
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
     .btn {
-      flex: 1;
-      padding: 14px 10px;
-      border-radius: 8px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 52px;
+      padding: 14px 12px;
+      border-radius: 13px;
       text-decoration: none;
-      font-size: 16px;
-      font-weight: bold;
-      transition: 0.3s;
+      font-size: 15px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.18),
+        transparent
+      );
+      transition: 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
     }
 
     .watch {
-      background: #ff1744;
       color: white;
+      background: linear-gradient(135deg, #ff1744, #d50036);
+      box-shadow: 0 10px 25px rgba(255,23,68,0.25);
+    }
+
+    .watch:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(255,23,68,0.4);
     }
 
     .download {
-      background: #00c853;
-      color: white;
+      color: #03130a;
+      background: linear-gradient(135deg, #00e676, #00c853);
+      box-shadow: 0 10px 25px rgba(0,230,118,0.18);
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
+    .download:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0,230,118,0.3);
     }
 
-    @media (max-width: 450px) {
+    /* Footer */
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 18px;
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .secure {
+      color: #00e676;
+      font-size: 13px;
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
       .buttons {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+      }
+
+      .play-button {
+        width: 62px;
+        height: 62px;
+        font-size: 23px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .card {
+        padding: 16px;
+      }
+
+      .title {
+        font-size: 24px;
       }
     }
   </style>
@@ -87,30 +292,65 @@
 
   <div class="container">
 
-    <h1 class="title">Your Video Title</h1>
+    <div class="card">
 
-    <img
-      class="thumbnail"
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdLSLUexdJ6ISgt0AuADl9BUxIQZVqTuXXJhiMYNrt_Q&s=10"
-      alt="Video Thumbnail"
-    >
+      <div class="badge">
+        <span></span>
+        Featured Video
+      </div>
 
-    <div class="buttons">
-      <a
-        href="https://example.com/video"
-        class="btn watch"
-        target="_blank"
-      >
-        ▶ Watch Full Video
-      </a>
+      <h1 class="title">Your Video Title</h1>
 
-      <a
-        href="https://example.com/video.mp4"
-        class="btn download"
-        download
-      >
-        ↓ Download Now
-      </a>
+      <p class="subtitle">
+        Watch the full video in high quality
+      </p>
+
+      <div class="video-box">
+
+        <img
+          class="thumbnail"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdLSLUexdJ6ISgt0AuADl9BUxIQZVqTuXXJhiMYNrt_Q&s=10"
+          alt="Video Thumbnail"
+        >
+
+        <div class="video-overlay">
+          <div class="play-button">▶</div>
+        </div>
+
+        <div class="duration">
+          12:45
+        </div>
+
+      </div>
+
+      <div class="buttons">
+
+        <a
+          href="https://example.com/video"
+          class="btn watch"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>▶</span>
+          Watch Full Video
+        </a>
+
+        <a
+          href="https://example.com/video.mp4"
+          class="btn download"
+          download
+        >
+          <span>↓</span>
+          Download Now
+        </a>
+
+      </div>
+
+      <div class="footer">
+        <span class="secure">✓</span>
+        Fast & Secure Video Access
+      </div>
+
     </div>
 
   </div>
